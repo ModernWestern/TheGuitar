@@ -106,7 +106,7 @@ namespace Sago
 
                 segment.PreviousPosition = segment.CurrentPosition;
                 segment.CurrentPosition += velocity;
-                segment.CurrentPosition += PhysicData.Gravity * Time.fixedDeltaTime;
+                // segment.CurrentPosition += PhysicData.Gravity * Time.fixedDeltaTime;
 
                 _segments[i] = segment;
             }

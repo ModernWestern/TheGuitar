@@ -7,7 +7,7 @@ namespace Sago.Physics
     public class PhysicData : LifecycleScriptableObject
     {
         [SerializeField]
-        private Vector2 gravity = new(0f, -2f);
+        private Vector2 gravity = new(0f, -9.8f);
 
         private static Func<Vector3> _getGravity;
 
@@ -21,6 +21,6 @@ namespace Sago.Physics
             _getGravity = null;
         }
 
-        public static Vector2 Gravity => _getGravity?.Invoke() ?? Vector2.up * -0f;
+        public static Vector2 Gravity => _getGravity?.Invoke() ?? Vector2.up * -9.8f;
     }
 }
