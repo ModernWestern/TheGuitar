@@ -4,49 +4,16 @@ using System.Collections.Generic;
 
 namespace Sago
 {
-    using Physics;
-
     [RequireComponent(typeof(LineRenderer))]
-    public class Rope : MonoBehaviour
+    public partial class Rope : MonoBehaviour
     {
-        [Serializable]
-        public class Settings
-        {
-            public int ropeLength;
-            public float ropeWidth;
-            [Range(0, 1)] public float segmentSize = 0.1f;
-            [Range(0, 1)] public float damping = 1;
-            public int simulationPasses = 50;
-        }
-
-        [SerializeField]
-        private LineRenderer lineRenderer;
-
-        [SerializeField]
-        private Settings settings;
-
-        [SerializeField]
-        private Transform anchorA, anchorB;
-
-        private readonly List<RopeSegments> _segments = new();
+        protected readonly List<RopeSegments> Segments = new();
+        
+        protected event Action<int> OnSimulationPasses;
+        
         private Vector3 _startPosition;
 
-#if UNITY_EDITOR
-
-        private void OnValidate()
-        {
-            if (!lineRenderer)
-            {
-                return;
-            }
-
-            var width = settings.ropeWidth;
-
-            lineRenderer.widthCurve = new AnimationCurve(new Keyframe(width, width));
-        }
-
-#endif
-        private void Awake()
+        protected virtual void Awake()
         {
             if (!lineRenderer)
             {
@@ -57,40 +24,44 @@ namespace Sago
                 return;
             }
 
+            lineRenderer = GetComponent<LineRenderer>();
+
             _startPosition = anchorA.position;
 
-            lineRenderer.positionCount = settings.ropeLength;
+            lineRenderer.positionCount = ropeSettings.ropeLength;
 
-            for (var i = 0; i < settings.ropeLength; i++)
+            for (var i = 0; i < ropeSettings.ropeLength; i++)
             {
-                _segments.Add(new RopeSegments(_startPosition));
+                Segments.Add(new RopeSegments(_startPosition));
 
-                _startPosition.y -= settings.segmentSize;
+                _startPosition.y -= ropeSettings.segmentSize;
             }
         }
 
-        public void Update()
+        protected virtual void Update()
         {
             Draw();
         }
 
-        private void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             PhysicSimulation();
 
-            for (var i = 0; i < settings.simulationPasses; i++)
+            for (var i = 0; i < physicSettings.simulationPasses; i++)
             {
+                OnSimulationPasses?.Invoke(i);
+                
                 SimulationPasses();
             }
         }
 
         private void Draw()
         {
-            var ropePositions = new Vector3[settings.ropeLength];
+            var ropePositions = new Vector3[ropeSettings.ropeLength];
 
-            for (var i = 0; i < _segments.Count; i++)
+            for (var i = 0; i < Segments.Count; i++)
             {
-                ropePositions[i] = _segments[i].CurrentPosition;
+                ropePositions[i] = Segments[i].CurrentPosition;
             }
 
             lineRenderer.SetPositions(ropePositions);
@@ -98,39 +69,43 @@ namespace Sago
 
         private void PhysicSimulation()
         {
-            for (var i = 0; i < _segments.Count; i++)
+            for (var i = 0; i < Segments.Count; i++)
             {
-                var segment = _segments[i];
+                var segment = Segments[i];
 
-                var velocity = (segment.CurrentPosition - segment.PreviousPosition) * settings.damping;
+                var velocity = (segment.CurrentPosition - segment.PreviousPosition) * physicSettings.damping;
 
                 segment.PreviousPosition = segment.CurrentPosition;
-                segment.CurrentPosition += velocity;
-                // segment.CurrentPosition += PhysicData.Gravity * Time.fixedDeltaTime;
 
-                _segments[i] = segment;
+                segment.CurrentPosition += velocity;
+
+                Segments[i] = segment;
             }
         }
 
         private void SimulationPasses()
         {
-            var firstSegment = _segments[0];
+            var firstSegment = Segments[0];
+
             firstSegment.CurrentPosition = anchorA.position;
-            _segments[0] = firstSegment;
 
-            var lastSegment = _segments[^1];
+            Segments[0] = firstSegment;
+
+            var lastSegment = Segments[^1];
+
             lastSegment.CurrentPosition = anchorB.position;
-            _segments[^1] = lastSegment;
 
-            for (var i = 0; i < settings.ropeLength - 1; i++)
+            Segments[^1] = lastSegment;
+
+            for (var i = 0; i < ropeSettings.ropeLength - 1; i++)
             {
-                var currentSegment = _segments[i];
+                var currentSegment = Segments[i];
 
-                var nextSegment = _segments[i + 1];
+                var nextSegment = Segments[i + 1];
 
                 var distance = (currentSegment.CurrentPosition - nextSegment.CurrentPosition).magnitude;
 
-                var difference = distance - settings.segmentSize;
+                var difference = distance - ropeSettings.segmentSize;
 
                 var changeDirection = (currentSegment.CurrentPosition - nextSegment.CurrentPosition).normalized;
 
@@ -139,6 +114,7 @@ namespace Sago
                 if (i != 0)
                 {
                     currentSegment.CurrentPosition -= changeVector * 0.5f;
+
                     nextSegment.CurrentPosition += changeVector * 0.5f;
                 }
                 else
@@ -146,8 +122,9 @@ namespace Sago
                     nextSegment.CurrentPosition += changeVector;
                 }
 
-                _segments[i] = currentSegment;
-                _segments[i + 1] = nextSegment;
+                Segments[i] = currentSegment;
+
+                Segments[i + 1] = nextSegment;
             }
         }
     }
