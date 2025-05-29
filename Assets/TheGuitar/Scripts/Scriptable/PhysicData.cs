@@ -21,6 +21,6 @@ namespace Sago.Physics
             _getGravity = null;
         }
 
-        public static Vector2 Gravity => _getGravity?.Invoke() ?? Vector2.up * -2f;
+        public static Vector2 Gravity => _getGravity?.Invoke() ?? Vector2.up * -0f;
     }
 }
