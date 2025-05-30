@@ -8,9 +8,9 @@ namespace Sago
     public partial class Rope : MonoBehaviour
     {
         protected readonly List<RopeSegments> Segments = new();
-        
+
         protected event Action<int> OnSimulationPasses;
-        
+
         private Vector3 _startPosition;
 
         protected virtual void Awake()
@@ -24,8 +24,6 @@ namespace Sago
                 return;
             }
 
-            lineRenderer = GetComponent<LineRenderer>();
-
             _startPosition = anchorA.position;
 
             lineRenderer.positionCount = ropeSettings.ropeLength;
@@ -38,19 +36,19 @@ namespace Sago
             }
         }
 
-        protected virtual void Update()
+        private void Update()
         {
             Draw();
         }
 
-        protected virtual void FixedUpdate()
+        private void FixedUpdate()
         {
             PhysicSimulation();
 
             for (var i = 0; i < physicSettings.simulationPasses; i++)
             {
                 OnSimulationPasses?.Invoke(i);
-                
+
                 SimulationPasses();
             }
         }
@@ -126,6 +124,11 @@ namespace Sago
 
                 Segments[i + 1] = nextSegment;
             }
+        }
+
+        private void OnDestroy()
+        {
+            OnSimulationPasses = null;
         }
     }
 }

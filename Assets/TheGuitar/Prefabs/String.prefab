@@ -146,6 +146,10 @@ MonoBehaviour:
     m_Bits: 64
   collisionRadius: 0.1
   friction: 1
+  note: 0
+  onStringReleased:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!120 &6936678548670745047
 LineRenderer:
   serializedVersion: 2

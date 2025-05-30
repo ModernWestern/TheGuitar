@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace Sago.Guitar
 {
@@ -12,6 +13,14 @@ namespace Sago.Guitar
 
         [SerializeField]
         private float friction = 0.1f;
+
+        [SerializeField]
+        private GuitarStringNote note;
+
+        [Space, SerializeField]
+        private UnityEvent<GuitarStringNote> onStringReleased;
+
+        private bool _collisionExit;
 
 #if UNITY_EDITOR
 
@@ -44,6 +53,8 @@ namespace Sago.Guitar
 
         private void Collision()
         {
+            var isColliding = false;
+
             for (var i = 1; i < Segments.Count; i++)
             {
                 var segment = Segments[i];
@@ -60,6 +71,8 @@ namespace Sago.Guitar
 
                     if (distance < collisionRadius)
                     {
+                        isColliding = true;
+
                         var normal = (segment.CurrentPosition - closestPoint).normalized;
 
                         if (normal == Vector2.zero)
@@ -79,6 +92,13 @@ namespace Sago.Guitar
 
                 Segments[i] = segment;
             }
+
+            if (_collisionExit && !isColliding)
+            {
+                onStringReleased?.Invoke(note);
+            }
+
+            _collisionExit = isColliding;
         }
     }
 }
