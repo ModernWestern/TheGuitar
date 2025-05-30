@@ -311,7 +311,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.3575862, g: 0.46576357, b: 0.61, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -441,7 +441,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.3575862, g: 0.46576357, b: 0.61, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -569,7 +569,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.46857142, g: 0.6108149, b: 0.8, a: 0}
+  m_BackGroundColor: {r: 0.6, g: 0.44950822, b: 0.42000002, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -978,7 +978,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notePrefab: {fileID: 4151727616097728158, guid: b5a04742eddab6e4a9c55bc028d3172e, type: 3}
   spawnOrigin: {fileID: 12831071}
-  noteCount: 15
+  noteCount: 20
 --- !u!4 &1418847870
 Transform:
   m_ObjectHideFlags: 0
@@ -1426,7 +1426,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.3575862, g: 0.46576357, b: 0.61, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1590,7 +1590,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.3575862, g: 0.46576357, b: 0.61, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2019,10 +2019,10 @@ SceneRoots:
   - {fileID: 1645914384}
   - {fileID: 2094139210}
   - {fileID: 1093861981}
+  - {fileID: 498704597}
+  - {fileID: 1418847870}
   - {fileID: 1461839324}
   - {fileID: 219325503}
   - {fileID: 2040259693}
   - {fileID: 216773882}
   - {fileID: 1811641923}
-  - {fileID: 498704597}
-  - {fileID: 1418847870}

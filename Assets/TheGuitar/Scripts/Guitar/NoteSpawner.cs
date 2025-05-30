@@ -23,8 +23,8 @@ namespace Sago
             {
                 var note = Instantiate(notePrefab, transform);
 
-                note.SetActive(false);
-
+                note.GetComponent<StringNote>().Init();
+                
                 _notes.Enqueue(note);
             }
         }
@@ -38,7 +38,7 @@ namespace Sago
 
             var note = _notes.Dequeue().GetComponent<StringNote>();
 
-            note.Init(transform.position, _notes.Enqueue);
+            note.Prepare(spawnOrigin.position, _notes.Enqueue);
         }
     }
 }

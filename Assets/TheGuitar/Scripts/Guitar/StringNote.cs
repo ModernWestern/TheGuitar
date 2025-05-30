@@ -6,20 +6,24 @@ namespace Sago.Guitar
 {
     public class StringNote : MonoBehaviour
     {
+        private readonly static int MainColor = Shader.PropertyToID("_Color");
+
         private event Action<GameObject> Dispose;
 
-        private Vector2 _startPosition;
+        private SpriteRenderer _renderer;
 
         private Rigidbody2D _rigidbody;
 
-        private void Awake()
+        public void Init()
         {
-            _startPosition = transform.position;
+            _renderer = GetComponent<SpriteRenderer>();
 
             _rigidbody = GetComponent<Rigidbody2D>();
+
+            gameObject.SetActive(false);
         }
 
-        public void Init(Vector2 origin, Action<GameObject> onDispose)
+        public void Prepare(Vector2 origin, Action<GameObject> onDispose)
         {
             Invoke(nameof(OnDispose), 4);
 
@@ -29,16 +33,23 @@ namespace Sago.Guitar
 
             Dispose = onDispose;
 
+            SetColor(Color.HSVToRGB(Random.value, .9f, 1));
+
             Animation();
         }
 
-        public void Animation()
+        private void Animation()
         {
             var randomDir = Random.insideUnitCircle.normalized;
 
             float randomForce = Random.Range(500, 1000);
 
             _rigidbody.AddForce(randomDir * randomForce);
+        }
+
+        private void SetColor(Color color)
+        {
+            _renderer.material.SetColor(MainColor, color);
         }
 
         private void OnDispose()
